@@ -56,6 +56,22 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <div class="fld" style="flex:2"><div class="slider"><span class="lab" style="min-width:90px">运费折扣</span><input type="range" id="shipDisc" min="0" max="40" value="12" oninput="recalc()"><span class="v" id="shipDiscV">8.8折</span></div></div>
     <div class="note" style="margin-left:12px;align-self:center">运费折扣作用于：头程海运费 / 尾程运费（与逐项入库折扣相互独立）。</div>
   </div>
+<details class="card" style="border-color:#4cc2ff" open>
+  <summary style="cursor:pointer;color:#4cc2ff;font-weight:600;font-size:15px">📖 使用说明（点开/收起 · 每个模块都能单独预估）</summary>
+  <div style="margin-top:10px">
+    <p style="margin:6px 0"><b>怎么用：</b>顶部 5 个标签（①头程 ②入库 ③仓储 ④2C出库 ⑤全链路）点一下切换，每个都是独立的小计算器。</p>
+    <ul style="margin:6px 0;padding-left:20px;color:#c9d4df">
+      <li><b>① 头程散货</b>：填体积/重量 → 头程运费</li>
+      <li><b>② 入库上架</b>：填件数/SKU数/实重 → 上架费（可选"我的合同费率"=谷仓实结单价）</li>
+      <li><b>③ 仓储费</b>：填体积/库龄/货型 → 仓储费（含免租期/超库龄）</li>
+      <li><b>④ 2C出库</b>：填实重/件数/Zone → 出库操作费+尾程运费</li>
+      <li><b>⑤ 全链路</b>：汇总上面各项 → 端到端单件总成本</li>
+    </ul>
+    <p style="margin:6px 0"><b>单模块能不能单独预估？</b> <span class="hl">能。</span>每个标签完全独立，不用把 5 个都填满。只想估出库费就只用 ④，想估上架费就只用 ②；只有看"从头程到出库的单件总成本"才用 ⑤ 汇总。</p>
+    <p style="margin:6px 0"><b>折扣区（页面顶部）：</b>6 个输入框 + 1 个运费滑块，填"实付比例%"。默认是你账号 RVG1039 真实账单反推值，一般不用动；改完立即重算。</p>
+    <p style="margin:6px 0;color:#f85149"><b>两个易错点：</b>① 出库操作费按<b>实重</b>取档，尾程运费按<b>计费重=max(实重,材积重/8000)</b>取档——两套基准别混；② 尾程重量档要<b>向上进位</b>（1.838kg 取 2.27 档，不是 1.81 档）。</p>
+  </div>
+</details>
 </div>
 
 <div class="tabs">
@@ -85,7 +101,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
       <label class="toggle"><input type="checkbox" id="hFum"> 木/草/竹包装（熏蒸1300+吊机980）</label>
     </div>
     <div class="out" id="hOut"></div>
-    <div class="note">计费体积重取大：1 CBM = 500 KG。<span class="hl">最小0.1方、每票最低1方</span>。头程报价含清关/拖车/起运杂费；不含税金、保险、查验附加。RMB类费用单列。</div>
+    <div class="note">✅ 本模块可单独预估，无需填写其他标签。计费体积重取大：1 CBM = 500 KG。<span class="hl">最小0.1方、每票最低1方</span>。头程报价含清关/拖车/起运杂费；不含税金、保险、查验附加。RMB类费用单列。</div>
   </div>
 </div>
 
@@ -111,7 +127,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
         <option value="XS/S/M">XS/S/M</option><option value="L1/L2">L1/L2</option><option value="XL">XL</option></select></div>
     </div>
     <div class="out" id="iOut"></div>
-    <div class="note">卸货费按<span class="hl">体积CBM</span>计；分拣/理货/入库操作费按件或SKU计。<span class="hl">混装</span>=来货理货费(箱内SKU≥2)；<span class="hl">新品</span>=新品查验费(按货型档)。</div>
+    <div class="note">✅ 本模块可单独预估，无需填写其他标签。卸货费按<span class="hl">体积CBM</span>计；分拣/理货/入库操作费按件或SKU计。<span class="hl">混装</span>=来货理货费(箱内SKU≥2)；<span class="hl">新品</span>=新品查验费(按货型档)。</div>
     <details id="wtDistBox" style="margin-top:10px;border:1px solid #262b36;border-radius:8px;padding:8px 12px;background:#15181f">
       <summary style="cursor:pointer;color:#e6e6e6;font-weight:600">⚙ 按重量档细分操作费（可选，更接近实况）</summary>
       <div class="note" style="margin:8px 0">留空则按上方「单件实重」套单一档；填入各重量档件数则按挂牌档位加权（逐项折扣率中的「操作 IB_F 折扣率」仍生效）。合同费率模式忽略此分布。</div>
@@ -139,7 +155,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
       <label class="toggle"><input type="checkbox" id="sCust" onchange="recalc()"> 客户物流（不自建仓配，无免租）</label>
     </div>
     <div class="out" id="sOut"></div>
-    <div class="note">公开价：谷仓物流<span class="hl">前30天免租</span>，第31天起按日费率；客户物流第1天起算。API真实=实际扣费含超库龄附加费（Feiyue库存实测 USEA≈公开价2.4×）。</div>
+    <div class="note">✅ 本模块可单独预估，无需填写其他标签。公开价：谷仓物流<span class="hl">前30天免租</span>，第31天起按日费率；客户物流第1天起算。API真实=实际扣费含超库龄附加费（Feiyue库存实测 USEA≈公开价2.4×）。</div>
   </div>
 </div>
 
@@ -167,7 +183,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
       <label class="toggle"><input type="checkbox" id="oBatch"> 批次管理费</label>
     </div>
     <div class="out" id="oOut"></div>
-    <div class="note">出库操作费按<span class="hl">件</span>计（与SKU数无关）；<span class="hl">多件打包费</span>在包裹内件数&gt;1时按包裹总重档收取。多品多件主要额外成本=多件打包费+更长拣货时间（价目表按件计费，无独立多SKU附加）。</div>
+    <div class="note">✅ 本模块可单独预估，无需填写其他标签。出库操作费按<span class="hl">件</span>计（与SKU数无关）；<span class="hl">多件打包费</span>在包裹内件数&gt;1时按包裹总重档收取。多品多件主要额外成本=多件打包费+更长拣货时间（价目表按件计费，无独立多SKU附加）。</div>
   </div>
 </div>
 
@@ -188,7 +204,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
       <label class="toggle"><input type="checkbox" id="mMm"> 多品多件订单</label>
     </div>
     <div class="out" id="mOut"></div>
-    <div class="note">单件总履约 = 头程分摊 + 入库单件 + 仓储单件/月 + 出库单件(含运费)。仓储按"库龄天数×日费率×体积/件数"分摊到单件。</div>
+    <div class="note">✅ 汇总端到端单件成本（也可单独打开本标签使用）；单件总履约 = 头程分摊 + 入库单件 + 仓储单件/月 + 出库单件(含运费)。仓储按"库龄天数×日费率×体积/件数"分摊到单件。</div>
   </div>
 </div>
 
