@@ -240,8 +240,8 @@ function getTier(tiers,w){var k=tierKey(w);return tiers[k]?tiers[k]:tiers[Object
 // 重量档细分操作费：与 D.inbound.shelf 的 keys 完全一致，顺序同 tierKey
 var WT_TIERS=[['0<X≤0.5 KG',0.5],['0.5<X≤1 KG',1],['1<X≤3 KG',3],['3<X≤5 KG',5],['5<X≤8 KG',8],['8<X≤10 KG',10],['10<X≤15 KG',15],['15<X≤22.5 KG',22.5],['22.5<X≤30 KG',30],['30<X≤40 KG',40],['40<X≤50 KG',50],['50<X≤70KG',70]];
 var _wtBuilt=false;
-function ensureWtDist(){ if(_wtBuilt)return; var box=document.getElementById('wtDist'); if(!box)return; var h=''; WT_TIERS.forEach(function(t,i){ h+='<div class="fld" style="flex:1 1 150px"><label id="wtlbl_'+i+'">'+t[0]+'</label><input id="dist_'+i+'" type="number" min="0" step="1" value="0" oninput="recalc()"></div>'; }); box.innerHTML=h; _wtBuilt=true; refreshWtDistPrices(); }
-function refreshWtDistPrices(){ var wh=document.getElementById('iWh').value; WT_TIERS.forEach(function(t,i){ var inp=document.getElementById('dist_'+i); if(inp){ var p=(D.inbound.shelf[t[0]]&&D.inbound.shelf[t[0]][wh])||0; var lbl=document.getElementById('wtlbl_'+i); if(lbl) lbl.innerHTML=t[0]+' <span style="color:#8a93a6">$'+p+'/件</span>'; } }); }
+function ensureWtDist(){ if(_wtBuilt)return; var box=document.getElementById('wtDist'); if(!box)return; box.innerHTML=''; WT_TIERS.forEach(function(t,i){ var fld=document.createElement('div'); fld.className='fld'; fld.style.flex='1 1 150px'; var lbl=document.createElement('label'); lbl.id='wtlbl_'+i; lbl.textContent=t[0]; var inp=document.createElement('input'); inp.id='dist_'+i; inp.type='number'; inp.min='0'; inp.step='1'; inp.value='0'; inp.oninput=recalc; fld.appendChild(lbl); fld.appendChild(inp); box.appendChild(fld); }); _wtBuilt=true; refreshWtDistPrices(); }
+function refreshWtDistPrices(){ var wh=document.getElementById('iWh').value; WT_TIERS.forEach(function(t,i){ var inp=document.getElementById('dist_'+i); if(inp){ var p=(D.inbound.shelf[t[0]]&&D.inbound.shelf[t[0]][wh])||0; var lbl=document.getElementById('wtlbl_'+i); if(lbl){ lbl.textContent=t[0]+' '; var sp=document.createElement('span'); sp.style.color='#8a93a6'; sp.textContent='$'+p+'/件'; lbl.appendChild(sp); } } }); }
 function loadRvgDist(){
   // 恢复 RVG1039-251010-0001 全部基数，验证逐项折扣率可到分复现账单
   clearWtDist();                                   // 用单一0.21档(公开价)作基准，折扣率68.38%即=合同0.1436/件
@@ -322,7 +322,7 @@ function calcInbound(){
   var t=tierKey(w);
   var shelfMap=getTier(D.inbound.shelf,w);
   var sumDist=0, distFee=0;
-  WT_TIERS.forEach(function(tk,i){ var n=+document.getElementById('dist_'+i).value||0; if(n>0){ var p=(D.inbound.shelf[tk[0]]&&D.inbound.shelf[tk[0]][wh])||0; distFee+=p*n; sumDist+=n; } });
+  WT_TIERS.forEach(function(tk,i){ var el=document.getElementById('dist_'+i); var n=el?(+el.value||0):0; if(n>0){ var p=(D.inbound.shelf[tk[0]]&&D.inbound.shelf[tk[0]][wh])||0; distFee+=p*n; sumDist+=n; } });
   var shelfNote, shelf;
   if(sumDist>0){ shelf=distFee*ibfM(); shelfNote='按重量分布加权('+sumDist+'件)'; }
   else { shelf=((shelfMap&&shelfMap[wh])||0)*pcs*ibfM(); shelfNote=t+' '+usd(shelfMap&&shelfMap[wh]?shelfMap[wh]:0)+'/件 ×'+pcs; }
@@ -471,7 +471,7 @@ function updateDiscLabels(){
 function recalc(){
   updateDiscLabels();
   ensureWtDist(); refreshWtDistPrices();
-  var sd=0; WT_TIERS.forEach(function(t,i){ sd+=(+document.getElementById('dist_'+i).value||0); });
+  var sd=0; WT_TIERS.forEach(function(t,i){ var el=document.getElementById('dist_'+i); sd+=(el?(+el.value||0):0); });
   var ws=document.getElementById('wtDistSum'); if(ws) ws.textContent= sd>0?('已填分布：'+sd+' 件'):'';
   document.getElementById('iNewBox').style.display=document.getElementById('iNew').checked?'flex':'none';
   var contract=document.getElementById('iContract').checked;
