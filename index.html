@@ -117,7 +117,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     </div>
     <div class="row">
       <label class="toggle"><input type="checkbox" id="iMix"> 混装发货（箱内≥2 SKU，加收来货理货费）</label>
-      <div class="fld" style="flex:0 0 auto"><label>混装SKU行数</label><input id="iMixLines" type="number" min="0" step="1" placeholder="选填" title="混装箱内 箱×SKU 组合数；留空按SKU数近似"></div>
+      <div class="fld" style="flex:0 0 auto"><label>混装实收SKU行数</label><input id="iMixLines" type="number" min="0" step="1" placeholder="选填" title="来货理货费(IB_TS)计费基数=混装箱内『实收』SKU行数：同箱≥2 SKU 即混装，计数时剔除 overseas_receiving_count=0 的未收货行；每张箱唛列实收SKU、每箱2张箱唛需去重。留空按SKU种类数近似"></div>
       <label class="toggle"><input type="checkbox" id="iNew" onchange="recalc()"> 含新品SKU（加收新品查验费）</label>
       <label class="toggle"><input type="checkbox" id="iContract" onchange="recalc()"> 我的合同费率（谷仓实结单价 · USEA实测，套用后=谷仓账单）</label>
     </div>
