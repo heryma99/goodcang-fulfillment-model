@@ -56,6 +56,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <div class="fld" style="flex:2"><div class="slider"><span class="lab" style="min-width:90px">运费折扣</span><input type="range" id="shipDisc" min="0" max="40" value="12" oninput="recalc()"><span class="v" id="shipDiscV">8.8折</span></div></div>
     <div class="note" style="margin-left:12px;align-self:center">运费折扣作用于：头程海运费 / 尾程运费（与逐项入库折扣相互独立）。</div>
   </div>
+</div>
 <details class="card" style="border-color:#4cc2ff" open>
   <summary style="cursor:pointer;color:#4cc2ff;font-weight:600;font-size:15px">📖 使用说明（点开/收起 · 每个模块都能单独预估）</summary>
   <div style="margin-top:10px">
@@ -72,7 +73,6 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <p style="margin:6px 0;color:#f85149"><b>两个易错点：</b>① 出库操作费按<b>实重</b>取档，尾程运费按<b>计费重=max(实重,材积重/8000)</b>取档——两套基准别混；② 尾程重量档要<b>向上进位</b>（1.838kg 取 2.27 档，不是 1.81 档）。</p>
   </div>
 </details>
-</div>
 
 <div class="tabs">
   <div class="tab on" onclick="show('head')">① 头程散货</div>
@@ -477,11 +477,17 @@ function recalc(){
   var contract=document.getElementById('iContract').checked;
   var hint=document.getElementById('discHint');
   if(hint)hint.style.display=contract?'block':'none';
-  var h=calcHead();document.getElementById('hOut').innerHTML=typeof h=='string'?('<div class="note">'+h+'</div>'):h;
-  document.getElementById('iOut').innerHTML=calcInbound();
-  document.getElementById('sOut').innerHTML=calcStorage();
-  document.getElementById('oOut').innerHTML=calcOut();
-  document.getElementById('mOut').innerHTML=calcModel();
+  function safeCalc(fn,name){
+    try{ return fn(); }catch(e){
+      console.error(name+' error:', e);
+      return '<div class="note" style="color:#f85149">⚠️ '+name+'计算出错：'+e.message+'</div>';
+    }
+  }
+  var h=safeCalc(calcHead,'头程');document.getElementById('hOut').innerHTML=typeof h=='string'?('<div class="note">'+h+'</div>'):h;
+  document.getElementById('iOut').innerHTML=safeCalc(calcInbound,'入库');
+  document.getElementById('sOut').innerHTML=safeCalc(calcStorage,'仓储');
+  document.getElementById('oOut').innerHTML=safeCalc(calcOut,'2C出库');
+  document.getElementById('mOut').innerHTML=safeCalc(calcModel,'全链路');
 }
 recalc();
 document.getElementById('iWh').onchange=recalc;
