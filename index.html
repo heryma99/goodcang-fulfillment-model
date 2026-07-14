@@ -51,7 +51,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <div class="fld" style="flex:1 1 32%;min-width:260px"><div class="slider"><span class="lab" style="min-width:150px">入库操作 IB_F 折扣率</span><input type="number" id="ibfD2" min="0" max="100" value="68.38" step="0.01" oninput="recalc()" onchange="recalc()"><span class="v" id="ibfD2V">6.8折</span></div></div>
     <div class="fld" style="flex:1 1 32%;min-width:260px"><div class="slider"><span class="lab" style="min-width:140px">新品 NPIF 折扣率</span><input type="number" id="npD" min="0" max="100" value="100" step="0.01" oninput="recalc()" onchange="recalc()"><span class="v" id="npDV">10.0折</span></div></div>
   </div>
-  <div id="discHint" class="note" style="display:none;border-left-color:#f87171;color:#f87171">⚠️ 当前「入库上架」勾选了<b>合同费率模式</b>，该模式直接采用谷仓实结单价（与 RVG1039 真实账单一致），上方逐项折扣率对<b>入库预估</b>不生效。取消勾选后即可用折扣率调整。</div>
+  <div id="discHint" class="note" style="display:none;border-left-color:#f87171;color:#f87171">⚠️ 当前「入库操作」勾选了<b>合同费率模式</b>，该模式直接采用谷仓实结单价（与 RVG1039 真实账单一致），上方逐项折扣率对<b>入库预估</b>不生效。取消勾选后即可用折扣率调整。</div>
   <div class="row" style="margin-top:10px">
     <div class="fld" style="flex:2"><div class="slider"><span class="lab" style="min-width:90px">运费折扣</span><input type="range" id="shipDisc" min="0" max="40" value="12" oninput="recalc()"><span class="v" id="shipDiscV">8.8折</span></div></div>
     <div class="note" style="margin-left:12px;align-self:center">运费折扣作用于：头程海运费 / 尾程运费（与逐项入库折扣相互独立）。</div>
@@ -63,12 +63,12 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <p style="margin:6px 0"><b>怎么用：</b>顶部 5 个标签（①头程 ②入库 ③仓储 ④2C出库 ⑤全链路）点一下切换，每个都是独立的小计算器。</p>
     <ul style="margin:6px 0;padding-left:20px;color:#c9d4df">
       <li><b>① 头程散货</b>：填体积/重量 → 头程运费</li>
-      <li><b>② 入库上架</b>：填件数/SKU数/实重 → 上架费（可选"我的合同费率"=谷仓实结单价）</li>
+      <li><b>② 入库操作</b>：填件数/SKU数/实重 → 入库操作费（可选"我的合同费率"=谷仓实结单价）</li>
       <li><b>③ 仓储费</b>：填体积/库龄/货型 → 仓储费（含免租期/超库龄）</li>
       <li><b>④ 2C出库</b>：填实重/件数/Zone → 出库操作费+尾程运费</li>
       <li><b>⑤ 全链路</b>：汇总上面各项 → 端到端单件总成本</li>
     </ul>
-    <p style="margin:6px 0"><b>单模块能不能单独预估？</b> <span class="hl">能。</span>每个标签完全独立，不用把 5 个都填满。只想估出库费就只用 ④，想估上架费就只用 ②；只有看"从头程到出库的单件总成本"才用 ⑤ 汇总。</p>
+    <p style="margin:6px 0"><b>单模块能不能单独预估？</b> <span class="hl">能。</span>每个标签完全独立，不用把 5 个都填满。只想估出库费就只用 ④，想估入库操作费就只用 ②；只有看"从头程到出库的单件总成本"才用 ⑤ 汇总。</p>
     <p style="margin:6px 0"><b>折扣区（页面顶部）：</b>6 个输入框 + 1 个运费滑块，填"实付比例%"。默认是你账号 RVG1039 真实账单反推值，一般不用动；改完立即重算。</p>
     <p style="margin:6px 0;color:#f85149"><b>两个易错点：</b>① 出库操作费按<b>实重</b>取档，尾程运费按<b>计费重=max(实重,材积重/8000)</b>取档——两套基准别混；② 尾程重量档要<b>向上进位</b>（1.838kg 取 2.27 档，不是 1.81 档）。</p>
   </div>
@@ -76,7 +76,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
 
 <div class="tabs">
   <div class="tab on" onclick="show('head')">① 头程散货</div>
-  <div class="tab" onclick="show('inbound')">② 入库上架</div>
+  <div class="tab" onclick="show('inbound')">② 入库操作</div>
   <div class="tab" onclick="show('storage')">③ 仓储费</div>
   <div class="tab" onclick="show('out2c')">④ 2C出库</div>
   <div class="tab" onclick="show('model')">⑤ 全链路模型</div>
@@ -107,7 +107,7 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
 
 <!-- ② 入库 -->
 <div class="sec" id="inbound">
-  <div class="card"><h3>入库上架成本（含 新品SKU / 混装）</h3>
+  <div class="card"><h3>入库操作费成本（含 新品SKU / 混装）</h3>
     <div class="row">
       <div class="fld"><label>目的仓</label><select id="iWh"></select></div>
       <div class="fld"><label>件数</label><input id="iPcs" type="number" value="1000" min="0" step="10"></div>
