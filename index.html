@@ -1,6 +1,10 @@
 <!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>谷仓海外仓全链路价格模型</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <style>
 :root{--bg:#0f1419;--card:#1a212b;--line:#2a3340;--tx:#e6edf3;--mut:#8b98a5;--acc:#4cc2ff;--acc2:#ffb454;--ok:#3fb950;--bad:#f85149;}
 *{box-sizing:border-box}
@@ -404,7 +408,8 @@ function calcOut(){
   var d=opD(), sd=shD();
   var t=tierKey(w);
   var pickMap=getTier(D.outbound.pick,w);
-  var pick=((pickMap&&pickMap[wh])||0)*N*(1-d);
+  var pickBase=((pickMap&&pickMap[wh])||0);
+  var pick=pickBase*N*(1-d);
   var multipack=0;
   if(N>1){
     var totalW=w*N;
@@ -422,9 +427,9 @@ function calcOut(){
   if(document.getElementById('oBatch').checked){var v=(D.outbound.batch[wh]||0)*N;add+=v;addl+='批次+'+usd(v)+' ';}
   var total=pick+multipack+(shipD!=null?shipD:0)+add;
   var html='<table>';
-  html+='<tr><td class="lab">出库操作费（'+t+' ×'+N+'件 ×(1-'+Math.round(d*100)+'%)）</td><td>$'+usd(pick)+'</td></tr>';
+  html+='<tr><td class="lab">出库操作费：$'+usd(pickBase)+' × '+N+'件 × '+Math.round(d*100)+'% = $'+usd(pick)+'</td><td>$'+usd(pick)+'</td></tr>';
   if(multipack>0)html+='<tr><td class="lab">多件订单打包费（'+N+'>1件）</td><td>$'+usd(multipack)+'</td></tr>';
-  html+='<tr><td class="lab">尾程运费（'+car+' Zone'+zone+' '+usd(tw)+'kg ×(1-'+Math.round(sd*100)+'%)）</td><td>'+(shipD!=null?('$'+usd(shipD)):'无报价')+'</td></tr>';
+  html+='<tr><td class="lab">尾程运费：$'+usd(ship)+' × '+Math.round(sd*100)+'% = $'+usd(shipD)+'</td><td>'+(shipD!=null?('$'+usd(shipD)):'无报价')+'</td></tr>';
   if(add>0)html+='<tr><td class="lab">附加服务</td><td>$'+usd(add)+' <span class="note">'+addl+'</span></td></tr>';
   html+='</table><div class="tot">2C单票合计：$'+usd(total)+' ｜ 单件：$'+usd(total/N)+'</div>';
   var note={'1':'单品单件：1 SKU·1件，无多件打包费','1m':'单品多件：1 SKU·N件，收多件打包费','mm':'多品多件：M SKU·N件，按件计操作费+多件打包费'}[type];
@@ -467,7 +472,7 @@ function calcModel(){
   var storage=(srate*(pcs*vol)*days)/pcs;
   // 2C出库
   var ot=document.getElementById('mMm').checked?'mm':'1';
-  var N=1;var pickMap=getTier(D.outbound.pick,w);var pick=((pickMap&&pickMap[wh])||0)*N*(1-d);
+  var N=1;var pickMap=getTier(D.outbound.pick,w);var pickBase=((pickMap&&pickMap[wh])||0);var pick=pickBase*N*(1-d);
   var ship=tailRate(carr[0],w,5); var shipD=ship!=null?ship*(1-sd):0;
   var outpc=pick+shipD;
   var total=head+inbound+storage+outpc;
@@ -475,8 +480,8 @@ function calcModel(){
   html+='<tr><td class="lab">① 头程分摊（'+wh+'经济 '+usd(hrate)+'/CBM）</td><td>$'+usd(head)+'/件</td></tr>';
   html+='<tr><td class="lab">② 入库单件（入库操作费折'+Math.round(ibfM()*100)+'%）</td><td>$'+usd(inbound)+'/件</td></tr>';
   html+='<tr><td class="lab">③ 仓储单件/月（API真实 月率$'+usd(D.real_storage[wh]||0)+'·库龄'+age+'天）</td><td>$'+usd(storage)+'/件·月</td></tr>';
-  html+='<tr><td class="lab">④ 出库操作费（×'+Math.round(d*100)+'%）</td><td>$'+usd(pick)+'/件</td></tr>';
-  html+='<tr><td class="lab">④ 尾程运费（'+carr[0]+' Z5 ×'+Math.round(sd*100)+'%）</td><td>$'+usd(shipD)+'/件</td></tr>';
+  html+='<tr><td class="lab">④ 出库操作费：$'+usd(pickBase)+' × '+N+'件 × '+Math.round(d*100)+'% = $'+usd(pick)+'</td><td>$'+usd(pick)+'/件</td></tr>';
+  html+='<tr><td class="lab">④ 尾程运费：$'+usd(ship)+' × '+Math.round(sd*100)+'% = $'+usd(shipD)+'</td><td>$'+usd(shipD)+'/件</td></tr>';
   html+='</table><div class="tot">端到端单件履约 ≈ $'+usd(total)+' /件（仓储按月计）</div>';
   html+='<div class="note">批量'+pcs+'件、月出'+ord+'单 → 月变动履约 ≈ $'+usd((inbound+storage+outpc)*ord)+'（出库随单发生，头程/入库为一次性）。清库/转仓越早，③仓储出血越少。</div>';
   return html;
