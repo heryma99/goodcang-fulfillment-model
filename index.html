@@ -475,7 +475,8 @@ function calcModel(){
   html+='<tr><td class="lab">① 头程分摊（'+wh+'经济 '+usd(hrate)+'/CBM）</td><td>$'+usd(head)+'/件</td></tr>';
   html+='<tr><td class="lab">② 入库单件（入库操作费折'+Math.round(ibfM()*100)+'%）</td><td>$'+usd(inbound)+'/件</td></tr>';
   html+='<tr><td class="lab">③ 仓储单件/月（API真实 月率$'+usd(D.real_storage[wh]||0)+'·库龄'+age+'天）</td><td>$'+usd(storage)+'/件·月</td></tr>';
-  html+='<tr><td class="lab">④ 2C出库单件（含尾程 '+carr[0]+' Z5）</td><td>$'+usd(outpc)+'/件</td></tr>';
+  html+='<tr><td class="lab">④ 出库操作费（×'+Math.round(d*100)+'%）</td><td>$'+usd(pick)+'/件</td></tr>';
+  html+='<tr><td class="lab">④ 尾程运费（'+carr[0]+' Z5 ×'+Math.round(sd*100)+'%）</td><td>$'+usd(shipD)+'/件</td></tr>';
   html+='</table><div class="tot">端到端单件履约 ≈ $'+usd(total)+' /件（仓储按月计）</div>';
   html+='<div class="note">批量'+pcs+'件、月出'+ord+'单 → 月变动履约 ≈ $'+usd((inbound+storage+outpc)*ord)+'（出库随单发生，头程/入库为一次性）。清库/转仓越早，③仓储出血越少。</div>';
   return html;
