@@ -14,30 +14,7 @@ tr.mrow{cursor:pointer} tr.mrow:hover{background:#1b2230 !important} tr:nth-chil
 .sub td.l,.sub th.l{text-align:left}
 .tip{color:#58a6ff;font-size:12px;margin:6px 0 0}
 .bar{display:inline-block;height:8px;background:#1f6feb;border-radius:2px;vertical-align:middle;margin-left:6px}
-</style><style>
-body.locked > *:not(#gate-overlay){display:none !important;}
-#gate-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e293b);font-family:-apple-system,"Microsoft YaHei",sans-serif;}
-body:not(.locked) #gate-overlay{display:none !important;}
-.gate-box{background:#fff;border-radius:16px;padding:34px 38px;width:330px;max-width:90vw;box-shadow:0 24px 70px rgba(0,0,0,.5);text-align:center;}
-.gate-title{font-size:21px;font-weight:800;color:#0f172a;margin-bottom:6px;}
-.gate-sub{font-size:13px;color:#64748b;margin-bottom:20px;}
-#gate-pwd{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px;outline:none;transition:border-color .15s;}
-#gate-pwd:focus{border-color:#2563eb;}
-#gate-btn{margin-top:16px;width:100%;padding:12px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;}
-#gate-btn:hover{background:#1d4ed8;}
-.gate-err{color:#dc2626;font-size:12.5px;margin-top:12px;min-height:16px;}
-.gate-foot{margin-top:16px;font-size:11px;color:#94a3b8;}
-</style>
-</head><body class="locked"><div id="gate-overlay">
-  <div class="gate-box">
-    <div class="gate-title">🔒 受限访问</div>
-    <div class="gate-sub">谷仓海外仓全链路模型 · 请输入访问密码</div>
-    <input id="gate-pwd" type="password" placeholder="访问密码" autocomplete="off" />
-    <button id="gate-btn" type="button">进入看板</button>
-    <div id="gate-err" class="gate-err"></div>
-    <div class="gate-foot">密码请联系管理员获取</div>
-  </div>
-</div>
+</style></head><body>
 <h1>谷仓入库费 · 公开价测算 vs 真实费用（2025 Q4）</h1>
 <div class="card"><div class="kpi">
 <div><b>22</b><span>有效单(排除预报单)</span></div>
@@ -96,5 +73,4 @@ function toggle(code){
   tr.style.display='';
 }
 </script>
-<script src="./gate.js"></script>
 </body></html>
