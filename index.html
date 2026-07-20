@@ -111,13 +111,13 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
     <div class="row">
       <div class="fld"><label>渠道</label><select id="hCh"><option value="economy">经济服务</option><option value="ecf">ECF服务</option></select></div>
       <div class="fld"><label>目的仓</label><select id="hWh"></select></div>
-      <div class="fld"><label>体积 CBM</label><input id="hCbm" type="number" value="10" min="0" step="0.1"></div>
-      <div class="fld"><label>实重 kg</label><input id="hW" type="number" value="4000" min="0" step="10"></div>
+      <div class="fld"><label>体积 CBM</label><input id="hCbm" type="number" value="10" min="0" step="0.1" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>实重 kg</label><input id="hW" type="number" value="4000" min="0" step="10" oninput="recalc()" onchange="recalc()"></div>
     </div>
     <div class="row">
       <div class="fld"><label>中转仓</label><select id="hHub"><option>东莞仓</option><option>广州仓</option><option>宁波仓</option></select></div>
       <div class="fld"><label>出口报关</label><select id="hDecl"><option value="150">退税报关 150元/票</option><option value="0">贸易代理 0</option></select></div>
-      <div class="fld"><label>货值 USD（保险）</label><input id="hVal" type="number" value="0" min="0" step="100"></div>
+      <div class="fld"><label>货值 USD（保险）</label><input id="hVal" type="number" value="0" min="0" step="100" oninput="recalc()" onchange="recalc()"></div>
     </div>
     <div class="row">
       <label class="toggle"><input type="checkbox" id="hConsol"> 散货集货出整柜（装柜600+查验25/方）</label>
@@ -133,10 +133,10 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
   <div class="card"><h3>入库操作费成本（含 新品SKU / 混装）</h3>
     <div class="row">
       <div class="fld"><label>目的仓</label><select id="iWh"></select></div>
-      <div class="fld"><label>件数</label><input id="iPcs" type="number" value="1000" min="0" step="10"></div>
-      <div class="fld"><label>SKU种类</label><input id="iSku" type="number" value="5" min="1" step="1"></div>
-      <div class="fld"><label>单件实重 kg</label><input id="iW" type="number" value="0.6" min="0" step="0.05"></div>
-      <div class="fld"><label>单件体积 m³</label><input id="iVol" type="number" value="0.0045" min="0" step="0.0005"></div>
+      <div class="fld"><label>件数</label><input id="iPcs" type="number" value="1000" min="0" step="10" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>SKU种类</label><input id="iSku" type="number" value="5" min="1" step="1" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>单件实重 kg</label><input id="iW" type="number" value="0.6" min="0" step="0.05" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>单件体积 m³</label><input id="iVol" type="number" value="0.0045" min="0" step="0.0005" oninput="recalc()" onchange="recalc()"></div>
     </div>
     <div class="row">
       <label class="toggle"><input type="checkbox" id="iMix"> 混装发货（箱内≥2 SKU，加收来货理货费）</label>
@@ -191,13 +191,13 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
         <option value="1m">单品多件（1 SKU / N 件）</option>
         <option value="mm">多品多件（M SKU / N 件）</option></select></div>
       <div class="fld"><label>目的仓</label><select id="oWh"></select></div>
-      <div class="fld"><label>SKU数 M</label><input id="oM" type="number" value="1" min="1" step="1"></div>
-      <div class="fld"><label>总件数 N</label><input id="oN" type="number" value="1" min="1" step="1"></div>
-      <div class="fld"><label>单件实重 kg</label><input id="oW" type="number" value="0.6" min="0" step="0.05"></div>
+      <div class="fld"><label>SKU数 M</label><input id="oM" type="number" value="1" min="1" step="1" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>总件数 N</label><input id="oN" type="number" value="1" min="1" step="1" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>单件实重 kg</label><input id="oW" type="number" value="0.6" min="0" step="0.05" oninput="recalc()" onchange="recalc()"></div>
     </div>
     <div class="row">
       <div class="fld"><label>尾程渠道</label><select id="oCar"></select></div>
-      <div class="fld"><label>Zone</label><input id="oZone" type="number" value="5" min="1" max="15" step="1"></div>
+      <div class="fld"><label>Zone</label><input id="oZone" type="number" value="5" min="1" max="15" step="1" oninput="recalc()" onchange="recalc()"></div>
     </div>
     <div class="row">
       <label class="toggle"><input type="checkbox" id="oSelf"> 自提附加费</label>
@@ -215,11 +215,11 @@ input:focus,select:focus{outline:none;border-color:var(--acc)}
   <div class="card"><h3>端到端单件履约成本模型（头程→入库→仓储→2C出库）</h3>
     <div class="row">
       <div class="fld"><label>目的仓</label><select id="mWh"></select></div>
-      <div class="fld"><label>发货总件数</label><input id="mPcs" type="number" value="1000" min="0" step="10"></div>
-      <div class="fld"><label>单件实重 kg</label><input id="mW" type="number" value="0.6" min="0" step="0.05"></div>
-      <div class="fld"><label>单件体积 m³</label><input id="mVol" type="number" value="0.0045" min="0" step="0.0005"></div>
-      <div class="fld"><label>月出订单数</label><input id="mOrd" type="number" value="300" min="0" step="10"></div>
-      <div class="fld"><label>平均库龄 天</label><input id="mAge" type="number" value="120" min="0" step="5"></div>
+      <div class="fld"><label>发货总件数</label><input id="mPcs" type="number" value="1000" min="0" step="10" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>单件实重 kg</label><input id="mW" type="number" value="0.6" min="0" step="0.05" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>单件体积 m³</label><input id="mVol" type="number" value="0.0045" min="0" step="0.0005" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>月出订单数</label><input id="mOrd" type="number" value="300" min="0" step="10" oninput="recalc()" onchange="recalc()"></div>
+      <div class="fld"><label>平均库龄 天</label><input id="mAge" type="number" value="120" min="0" step="5" oninput="recalc()" onchange="recalc()"></div>
     </div>
     <div class="row">
       <label class="toggle"><input type="checkbox" id="mMix"> 混装</label>
